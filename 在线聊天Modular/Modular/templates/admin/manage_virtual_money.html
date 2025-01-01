@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户充值虚拟币</title>
+</head>
+<body>
+    <h1>用户充值和管理虚拟币</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>用户名</th>
+                <th>当前余额</th>
+                <th>修改余额</th>
+                <th>账号状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.virtual_money }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin.update_user_balance') }}" style="display:inline;">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <input type="number" name="new_balance" step="0.01" value="{{ user.virtual_money }}">
+                        <button type="submit">修改余额</button>
+                    </form>
+                </td>
+                <td>{{ '活跃' if user.is_active else '封禁' }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}" style="display:inline;">
+                        <button type="submit">{{ '封禁' if user.is_active else '解封' }}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin.dashboard') }}">返回管理员后台</a>
+</body>
+</html>

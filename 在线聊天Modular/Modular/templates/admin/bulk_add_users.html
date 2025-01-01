@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>批量添加用户</title>
+</head>
+<body>
+    <h1>批量添加用户</h1>
+    <p>每行输入一个用户，格式：用户名,密码,身份证号,电话,微信/QQ,地址</p>
+
+    <form method="POST">
+        <textarea name="user_data" rows="10" cols="80" placeholder="例如：user1,123456,320101199901011234,13800138000,user1_qq,北京市朝阳区"></textarea>
+        <br>
+        <button type="submit">提交</button>
+    </form>
+
+    <a href="{{ url_for('admin.manage_users') }}">返回用户管理</a>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户聊天请求</title>
+    <script>
+        // 发送聊天请求
+        function sendChatRequest(targetUserId) {
+            fetch('/user/send_chat_request', {
+                method: 'POST', // 必须使用 POST 方法
+                headers: {
+                    'Content-Type': 'application/json', // 请求数据类型
+                },
+                body: JSON.stringify({
+                    target_user_id: targetUserId  // 传递目标用户 ID
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(`请求失败: ${data.error}`);
+                } else {
+                    alert('聊天请求已发送！');
+                }
+            })
+            .catch(error => {
+                console.error('发送聊天请求时出错:', error);
+                alert('发送聊天请求时发生错误，请稍后再试！');
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>用户聊天请求</h1>
+
+    <!-- 当前用户信息 -->
+    <p>当前用户：<strong>{{ user.username }}</strong></p>
+
+    <!-- 用户列表 -->
+    <h2>在线用户</h2>
+    <ul>
+        {% for other_user in users %}
+        {% if other_user.id != user.id %} <!-- 不显示当前用户 -->
+        <li>
+            {{ other_user.username }}
+            <button onclick="sendChatRequest({{ other_user.id }})">发起聊天</button>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+
+    <!-- 返回仪表盘按钮 -->
+    <button onclick="location.href='{{ url_for('user.dashboard') }}'">返回仪表盘</button>
+</body>
+</html>

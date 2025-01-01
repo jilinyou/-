@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>发送消息</title>
+</head>
+<body>
+    <h1>发送消息</h1>
+
+    <!-- 消息发送表单 -->
+    <form method="POST" action="{{ url_for('admin.send_message') }}">
+        <label for="receiver_id">接收者ID：</label>
+        <input type="text" id="receiver_id" name="receiver_id" required>
+        <br>
+        <label for="message">消息内容：</label>
+        <textarea id="message" name="message" required></textarea>
+        <br>
+        <button type="submit">发送消息</button>
+    </form>
+
+    <!-- 返回管理员仪表盘 -->
+    <button onclick="location.href='{{ url_for('admin.dashboard') }}'">返回</button>
+</body>
+</html>

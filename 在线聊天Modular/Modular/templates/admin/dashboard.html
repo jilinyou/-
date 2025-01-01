@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员后台</title>
+</head>
+<body>
+    <h1>欢迎进入管理员后台</h1>
+
+    <!-- 其他功能按钮 -->
+    <button onclick="location.href='{{ url_for('admin.manage_users') }}'">管理用户</button>
+    <button onclick="location.href='{{ url_for('admin.manage_activation_codes') }}'">管理激活码</button>
+    <button onclick="location.href='{{ url_for('admin.change_password') }}'">修改密码</button>
+    <button onclick="location.href='{{ url_for('admin.manage_virtual_money') }}'">充值虚拟币</button>
+    <button onclick="location.href='{{ url_for('admin.bulk_add_users') }}'">批量添加用户</button>
+    <button onclick="location.href='{{ url_for('admin.send_message') }}'">发送信息</button>
+    <button onclick="location.href='{{ url_for('admin.manage_chat_requests') }}'">管理聊天请求</button>
+    <button onclick="location.href='{{ url_for('admin.chat') }}'">进入聊天</button>
+    <button onclick="location.href='{{ url_for('admin.logout') }}'">注销</button>
+
+</body>
+</html>

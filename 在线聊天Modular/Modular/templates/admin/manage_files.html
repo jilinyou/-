@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文件管理</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>文件管理</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>文件名</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for file in files %}
+            <tr>
+                <td><a href="{{ url_for('user.uploaded_file', filename=file) }}" target="_blank">{{ file }}</a></td>
+                <td>
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="filename" value="{{ file }}">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 返回管理员仪表盘 -->
+    <button onclick="location.href='{{ url_for('admin.dashboard') }}'">返回仪表盘</button>
+</body>
+</html>

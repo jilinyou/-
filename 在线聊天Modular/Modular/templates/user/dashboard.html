@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户仪表盘</title>
+</head>
+<body>
+    <h1>欢迎来到用户仪表盘</h1>
+    <p>这里是普通用户的主页内容。</p>
+
+    <!-- 跳转到修改信息页面 -->
+    <button onclick="location.href='{{ url_for('user.profile') }}'">修改个人信息</button>
+    <button onclick="location.href='{{ url_for('user.view_messages') }}'">用户查看信息</button>
+    <button onclick="location.href='{{ url_for('user.view_messages') }}'">查看消息</button>
+    <button onclick="location.href='{{ url_for('user.chat') }}'">进入聊天</button>
+    <button onclick="location.href='{{ url_for('user.chat_request') }}'">发起聊天请求</button>
+
+
+
+    <!-- 其他内容 -->
+    <h2>虚拟币余额</h2>
+    <p>当前余额：{{ user.virtual_money }} 虚拟币</p>
+
+    <!-- 注销按钮 -->
+    <a href="{{ url_for('user.logout') }}">注销</a>
+</body>
+</html>

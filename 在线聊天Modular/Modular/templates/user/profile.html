@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息查询与修改</title>
+</head>
+<body>
+    <h1>用户信息查询与修改</h1>
+
+    <!-- 显示当前虚拟币余额（只读） -->
+    <h2>当前虚拟币余额</h2>
+    <p>{{ user.virtual_money }} 虚拟币</p>
+
+    <!-- 用户信息修改表单 -->
+    <h2>修改用户信息</h2>
+    <form method="POST">
+        <label for="username">用户名：</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}" required>
+        <br>
+
+        <label for="password">密码：</label>
+        <input type="password" id="password" name="password" value="{{ user.password }}" required>
+        <br>
+
+        <label for="id_card">身份证：</label>
+        <input type="text" id="id_card" name="id_card" value="{{ user.id_card }}" required>
+        <br>
+
+        <label for="phone_number">电话号码：</label>
+        <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}" required>
+        <br>
+
+        <label for="wechat_qq">微信/QQ：</label>
+        <input type="text" id="wechat_qq" name="wechat_qq" value="{{ user.wechat_qq }}" required>
+        <br>
+
+        <label for="address">地址：</label>
+        <input type="text" id="address" name="address" value="{{ user.address }}" required>
+        <br>
+
+        <button type="submit">保存修改</button>
+    </form>
+
+    <hr>
+
+    <!-- 返回仪表盘按钮 -->
+    <a href="{{ url_for('user.dashboard') }}">返回仪表盘</a>
+</body>
+</html>

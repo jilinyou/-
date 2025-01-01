@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎页面</title>
+</head>
+<body>
+    <h1>欢迎使用系统</h1>
+    <p>请选择您想要操作的功能：</p>
+
+    <!-- 跳转到用户登录页面 -->
+    <button onclick="location.href='{{ url_for('user.login') }}'">用户登录</button>
+
+</body>
+</html>

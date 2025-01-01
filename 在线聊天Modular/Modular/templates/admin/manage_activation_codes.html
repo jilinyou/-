@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理激活码</title>
+</head>
+<body>
+    <h1>激活码管理</h1>
+
+    <!-- 搜索和筛选 -->
+    <form method="GET">
+        <label for="search_user">搜索使用者：</label>
+        <input type="text" name="search_user" value="{{ search_user }}" placeholder="输入用户名">
+        <label for="filter_status">筛选状态：</label>
+        <select name="filter_status">
+            <option value="" {% if filter_status == '' %}selected{% endif %}>全部</option>
+            <option value="used" {% if filter_status == 'used' %}selected{% endif %}>已使用</option>
+            <option value="unused" {% if filter_status == 'unused' %}selected{% endif %}>未使用</option>
+        </select>
+        <button type="submit">搜索/筛选</button>
+    </form>
+
+    <hr>
+
+    <!-- 激活码列表 -->
+    <form method="POST">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select_all" onclick="toggleSelection(this)"> 全选</th>
+                    <th>激活码</th>
+                    <th>状态</th>
+                    <th>使用者</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for code in activation_codes %}
+                <tr>
+                    <td><input type="checkbox" name="selected_ids" value="{{ code.id }}"></td>
+                    <td>{{ code.code }}</td>
+                    <td>{{ '已使用' if code.is_used else '未使用' }}</td>
+                    <td>
+                        {% if code.is_used and code.users %}
+                            {{ code.users.username }}
+                        {% else %}
+                            无
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- 批量删除按钮 -->
+        <button type="submit" name="delete_selected" onclick="return confirm('确认删除选中的激活码？')">删除选中</button>
+    </form>
+
+    <hr>
+
+    <!-- 批量添加激活码 -->
+    <form method="POST">
+        <h2>批量添加激活码</h2>
+        <textarea name="activation_codes" rows="5" cols="50" placeholder="每行一个激活码"></textarea>
+        <br>
+        <button type="submit">添加激活码</button>
+    </form>
+
+    <script>
+        // 全选/取消全选功能
+        function toggleSelection(selectAllCheckbox) {
+            const checkboxes = document.querySelectorAll('input[name="selected_ids"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+    </script>
+</body>
+</html>

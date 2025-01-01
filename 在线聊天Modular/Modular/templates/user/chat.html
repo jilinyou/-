@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户聊天页面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        let socket;  // WebSocket连接
+        let room = 'main_room';  // 默认房间
+        const username = "{{ user.username }}";  // 获取当前用户的用户名
+
+        // 初始化聊天连接
+        function initSocket() {
+            socket = io.connect('http://' + document.domain + ':' + location.port);
+
+            // 监听服务器消息
+            socket.on('message', function(data) {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.value += `[${data.username}]: ${data.message}\n`;  // 更新聊天框
+            });
+
+            // 监听文件消息
+            socket.on('file_message', function(data) {
+                const chatBox = document.getElementById('chat-box');
+                chatBox.value += `[${data.username}]: 发送了文件: ${data.file_url}\n`;  // 显示文件消息
+                const fileLink = document.createElement('a');
+                fileLink.href = data.file_url;
+                fileLink.textContent = `查看文件`;
+                fileLink.target = '_blank';
+                document.getElementById('file-messages').appendChild(fileLink);
+                document.getElementById('file-messages').appendChild(document.createElement('br'));
+            });
+
+            // 监听错误消息
+            socket.on('error', function(data) {
+                alert(`错误: ${data.message}`);
+            });
+
+            // 通知服务器加入房间
+            socket.emit('join', { username: username, room: room });
+        }
+
+        // 发送消息到服务器
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+
+            if (message === '') {
+                alert('请输入消息内容！');
+                return;
+            }
+
+            // 向服务器发送消息
+            socket.emit('send_message', { username: username, room: room, message: message });
+            messageInput.value = '';  // 清空输入框
+        }
+
+        // 上传文件
+        function uploadFile() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('请选择一个文件！');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/user/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(`文件上传失败: ${data.error}`);
+                } else {
+                    // 广播文件到房间
+                    socket.emit('send_file', { username: username, room: room, file_url: data.file_url });
+                }
+            })
+            .catch(error => {
+                console.error('上传文件时出错:', error);
+                alert('文件上传失败！');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initSocket();  // 初始化WebSocket连接
+        });
+    </script>
+</head>
+<body>
+    <h1>用户聊天页面</h1>
+
+    <!-- 显示当前用户信息 -->
+    <p>当前用户：<strong>{{ user.username }}</strong></p>
+
+    <!-- 聊天框 -->
+    <div>
+        <textarea id="chat-box" readonly style="width: 100%; height: 300px;"></textarea><br>
+        <input type="text" id="message-input" placeholder="输入消息...">
+        <button onclick="sendMessage()">发送消息</button>
+    </div>
+
+    <!-- 文件上传 -->
+    <div>
+        <input type="file" id="file-input">
+        <button onclick="uploadFile()">上传文件</button>
+    </div>
+
+    <!-- 显示文件消息 -->
+    <div id="file-messages" style="margin-top: 20px;"></div>
+
+    <!-- 返回仪表盘按钮 -->
+    <button onclick="location.href='{{ url_for('user.dashboard') }}'">返回仪表盘</button>
+</body>
+</html>

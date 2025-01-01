@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理用户</title>
+</head>
+<body>
+    <h1>用户管理</h1>
+
+    <!-- 快捷按钮 -->
+    <div>
+        <button onclick="location.href='{{ url_for('admin.dashboard') }}'">返回后台</button>
+        <button onclick="location.href='{{ url_for('admin.bulk_add_users') }}'">增加用户</button>
+    </div>
+
+    <!-- 搜索功能 -->
+    <form method="GET">
+        <input type="text" name="search_query" value="{{ search_query }}" placeholder="搜索用户名或电话">
+        <button type="submit">搜索</button>
+    </form>
+
+    <!-- 用户列表 -->
+    <form method="POST">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select_all" onclick="toggleSelection(this)"> 全选</th>
+                    <th>用户名</th>
+                    <th>联系电话</th>
+                    <th>微信/QQ号</th>
+                    <th>家庭地址</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><input type="checkbox" name="selected_ids" value="{{ user.id }}"></td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.phone_number }}</td>
+                    <td>{{ user.wechat_qq }}</td>
+                    <td>{{ user.address }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}">编辑</a>
+                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}" style="display:inline;">
+                            <button type="submit" onclick="return confirm('确认删除用户 {{ user.username }}？')">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- 批量删除按钮 -->
+        <button type="submit" onclick="return confirm('确认删除选中的用户？')">删除选中</button>
+    </form>
+
+    <script>
+        // 全选/取消全选功能
+        function toggleSelection(selectAllCheckbox) {
+            const checkboxes = document.querySelectorAll('input[name="selected_ids"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+    </script>
+</body>
+</html>

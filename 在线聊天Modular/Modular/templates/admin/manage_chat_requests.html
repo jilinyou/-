@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理聊天请求</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .danger {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>管理聊天请求</h1>
+
+    <!-- 如果没有聊天请求 -->
+    {% if chat_requests|length == 0 %}
+        <p>当前没有待处理的聊天请求。</p>
+    {% else %}
+        <!-- 聊天请求表格 -->
+        <table>
+            <thead>
+                <tr>
+                    <th>请求ID</th>
+                    <th>发起用户</th>
+                    <th>请求时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in chat_requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.user.username }}</td>
+                    <td>{{ request.timestamp }}</td>
+                    <td>
+                        {% if request.status == 'pending' %}
+                            <span class="warning">待处理</span>
+                        {% elif request.status == 'accepted' %}
+                            <span class="success">已接受</span>
+                        {% elif request.status == 'rejected' %}
+                            <span class="danger">已拒绝</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <!-- 接受聊天请求 -->
+                        <form method="POST" action="{{ url_for('admin.manage_chat_requests') }}" style="display:inline;">
+                            <input type="hidden" name="request_id" value="{{ request.id }}">
+                            <input type="hidden" name="action" value="accept">
+                            <button type="submit">接受</button>
+                        </form>
+                        <!-- 拒绝聊天请求 -->
+                        <form method="POST" action="{{ url_for('admin.manage_chat_requests') }}" style="display:inline;">
+                            <input type="hidden" name="request_id" value="{{ request.id }}">
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit">拒绝</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- 返回管理员仪表盘 -->
+    <button onclick="location.href='{{ url_for('admin.dashboard') }}'">返回仪表盘</button>
+</body>
+</html>
